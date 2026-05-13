@@ -1,136 +1,49 @@
-const state = {
-  hp: 100,
-  memory: 0,
-  enemyHp: 60,
-};
-
-const scenes = {
-  start: {
-    visual: "moon",
-    text: "你在夢裡醒來。眼前是一條發光的邊界線，遠處有人在呼喚你的名字。這裡是明晰夢與惡夢交界的地方。",
-    choices: [
-      ["靠近邊界線", "border"],
-      ["先觀察四周", "look"]
-    ]
-  },
-  look: {
-    visual: "forest",
-    text: "你發現地上有一枚紫色碎片。它像是某段被遺忘的記憶，握住它時，心臟微微發熱。",
-    action: () => gainMemory("第一枚記憶碎片：『我不是只能逃跑。』"),
-    choices: [["帶著碎片前進", "border"]]
-  },
-  border: {
-    visual: "forest",
-    text: "邊界線後方浮現一隻夢魘。它沒有臉，只用你的聲音低語：『你真的能做到嗎？』",
-    choices: [
-      ["正面迎戰", "battle"],
-      ["用記憶碎片抵抗", "memoryGuard"]
-    ]
-  },
-  memoryGuard: {
-    visual: "enemy",
-    text: "你握緊記憶碎片，夢魘的聲音變小了。它的形體出現裂痕。",
-    action: () => damageEnemy(25, "記憶讓夢魘動搖了。"),
-    choices: [["繼續戰鬥", "battle"]]
-  },
-  battle: {
-    visual: "enemy",
-    text: "夢魘向你撲來。你必須在夢境崩壞前擊敗它。",
-    choices: [
-      ["光之攻擊", "attack"],
-      ["防禦並冷靜呼吸", "defend"],
-      ["尋找第二枚記憶", "searchMemory"]
-    ]
-  },
-  attack: {
-    visual: "enemy",
-    text: "你把意識凝成一道光，刺向夢魘。它後退了，但你的精神也被反噬。",
-    action: () => { damageEnemy(20, "攻擊命中。夢魘變得不穩定。"); hurt(12); },
-    choices: () => nextBattleChoices()
-  },
-  defend: {
-    visual: "enemy",
-    text: "你閉上眼睛，提醒自己：這只是夢。夢魘的攻擊穿過你的身體，傷害變小了。",
-    action: () => hurt(5),
-    choices: () => nextBattleChoices()
-  },
-  searchMemory: {
-    visual: "forest",
-    text: "你在破碎的夢境裡找到第二枚記憶碎片。上面寫著：『害怕也沒關係，我還是可以往前。』",
-    action: () => gainMemory("第二枚記憶碎片：『害怕也沒關係。』"),
-    choices: [["回到戰鬥", "battle"]]
-  },
-  victory: {
-    visual: "end",
-    text: "夢魘碎裂，變成最後一枚記憶碎片。你聽見自己的聲音說：『醒來之前，我想把真正的自己帶回去。』Demo Clear！",
-    action: () => gainMemory("第三枚記憶碎片：『我會把自己帶回去。』"),
-    choices: [["重新開始", "restart"]]
-  },
-  gameover: {
-    visual: "enemy",
-    text: "夢境被黑暗吞沒。你暫時醒不過來了……但是沒關係，夢可以重來。",
-    choices: [["重新開始", "restart"]]
-  }
-};
-
-function gainMemory(message) {
-  if (!document.querySelector(`[data-log="${message}"]`)) {
-    state.memory = Math.min(3, state.memory + 1);
-    addLog(message, message);
-  }
+const characters=[
+ {id:1,name:'露希亞',rarity:'R',emoji:'🗡️',power:10,desc:'能在夢中保持清醒的少女。'},
+ {id:2,name:'月白巫女',rarity:'SR',emoji:'🌙',power:24,desc:'以月光淨化夢魘的守護者。'},
+ {id:3,name:'黑羽使者',rarity:'SR',emoji:'🪽',power:26,desc:'來自邊界的沉默引路人。'},
+ {id:4,name:'緋色夢姬',rarity:'SSR',emoji:'💗',power:55,desc:'能讓惡夢反轉成力量的夢境公主。'},
+ {id:5,name:'星塵貓',rarity:'R',emoji:'🐈‍⬛',power:12,desc:'會在夢裡偷走恐懼的小貓。'},
+ {id:6,name:'終夜女王',rarity:'SSR',emoji:'👑',power:62,desc:'掌管深夜與記憶深海的存在。'}
+];
+const enemies=[
+ {name:'影之獸',emoji:'🌑',hp:100},{name:'焦慮蟲群',emoji:'🕷️',hp:160},{name:'遺忘的自己',emoji:'🪞',hp:240},{name:'邊界夢魘',emoji:'🩸',hp:360}
+];
+let state={gems:300,memories:0,owned:[1],enemyIndex:0,enemyHp:100};
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem('lucid-border-v2',JSON.stringify(state));}
+function load(){const s=localStorage.getItem('lucid-border-v2'); if(s) state=JSON.parse(s);}
+function power(){return state.owned.reduce((sum,id)=>sum+characters.find(c=>c.id===id).power,0)}
+function enemy(){return enemies[state.enemyIndex%enemies.length]}
+function update(){
+ $('gemText').textContent=state.gems; $('memoryText').textContent=state.memories; $('powerText').textContent=power();
+ const e=enemy(); $('enemyName').textContent=e.name; $('enemyEmoji').textContent=e.emoji; $('enemyHpText').textContent=`HP ${Math.max(0,Math.ceil(state.enemyHp))} / ${e.hp}`; $('enemyHpFill').style.width=`${Math.max(0,state.enemyHp/e.hp*100)}%`;
+ renderTeam(); renderCodex(); save();
 }
-
-function hurt(amount) {
-  state.hp = Math.max(0, state.hp - amount);
-  addLog(`HP -${amount}`);
+function attack(mult=1){
+ state.enemyHp-=power()*mult;
+ if(state.enemyHp<=0){const reward=20+state.enemyIndex*5;state.memories+=1;state.gems+=reward;state.enemyIndex++;state.enemyHp=enemy().hp;$('battleLog').textContent=`夢魘被擊破！獲得記憶碎片 +1、夢晶 +${reward}。新的夢魘出現了。`;}
+ else {$('battleLog').textContent=`隊伍造成 ${power()*mult} 傷害。夢魘正在削弱……`;}
+ update();
 }
-
-function damageEnemy(amount, message) {
-  state.enemyHp = Math.max(0, state.enemyHp - amount);
-  addLog(`${message}（夢魘HP：${state.enemyHp}）`);
+function renderTeam(){
+ $('teamList').innerHTML=state.owned.map(id=>{const c=characters.find(x=>x.id===id);return `<div class="unit"><div><strong>${c.emoji} ${c.name}</strong><br><span class="rarity-${c.rarity}">${c.rarity}</span>｜戰力 ${c.power}</div><small>${c.desc}</small></div>`}).join('');
 }
-
-function addLog(text, key = null) {
-  const li = document.createElement("li");
-  li.textContent = text;
-  if (key) li.dataset.log = key;
-  document.getElementById("log").prepend(li);
+function renderCodex(){
+ $('codexGrid').innerHTML=characters.map(c=>{const own=state.owned.includes(c.id);return `<div class="codex-item ${own?'':'locked'}"><div class="codex-emoji">${own?c.emoji:'❔'}</div><strong>${own?c.name:'未解鎖'}</strong><p class="rarity-${c.rarity}">${c.rarity}</p><small>${own?c.desc:'被夢霧遮住的角色。'}</small></div>`}).join('');
 }
-
-function nextBattleChoices() {
-  if (state.enemyHp <= 0) return [["觸碰最後的光", "victory"]];
-  if (state.hp <= 0) return [["墜入夢底", "gameover"]];
-  return [["繼續戰鬥", "battle"]];
+function gacha(){
+ if(state.gems<100){$('gachaResult').textContent='夢晶不足。去戰鬥累積夢晶吧。';return;}
+ state.gems-=100;
+ const roll=Math.random(); let pool=roll<.08?characters.filter(c=>c.rarity==='SSR'):roll<.38?characters.filter(c=>c.rarity==='SR'):characters.filter(c=>c.rarity==='R');
+ const c=pool[Math.floor(Math.random()*pool.length)];
+ if(!state.owned.includes(c.id)){state.owned.push(c.id);$('gachaResult').innerHTML=`召喚成功！<br><span class="rarity-${c.rarity}">${c.rarity}</span> ${c.emoji} <b>${c.name}</b><br>${c.desc}`;}
+ else {state.memories+=2;$('gachaResult').innerHTML=`抽到重複角色：${c.emoji} <b>${c.name}</b><br>轉換為記憶碎片 +2。`;}
+ update();
 }
-
-function render(sceneName) {
-  if (sceneName === "restart") {
-    state.hp = 100;
-    state.memory = 0;
-    state.enemyHp = 60;
-    document.getElementById("log").innerHTML = "";
-    sceneName = "start";
-  }
-
-  const scene = scenes[sceneName];
-  if (scene.action) scene.action();
-
-  document.getElementById("hp").textContent = state.hp;
-  document.getElementById("memory").textContent = state.memory;
-  document.getElementById("sceneText").textContent = scene.text;
-
-  const visual = document.getElementById("sceneVisual");
-  visual.className = `scene-visual ${scene.visual}`;
-
-  const choices = typeof scene.choices === "function" ? scene.choices() : scene.choices;
-  const choiceBox = document.getElementById("choices");
-  choiceBox.innerHTML = "";
-  choices.forEach(([label, target]) => {
-    const btn = document.createElement("button");
-    btn.textContent = label;
-    btn.onclick = () => render(target);
-    choiceBox.appendChild(btn);
-  });
-}
-
-render("start");
+load(); state.enemyHp=state.enemyHp||enemy().hp; update();
+$('startBtn').onclick=()=>{$('startScreen').classList.remove('active');$('gameScreen').classList.add('active')};
+$('manualAttack').onclick=()=>attack(2);
+$('gachaBtn').onclick=gacha;
+document.querySelectorAll('.tab').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.tab,.page').forEach(x=>x.classList.remove('active'));btn.classList.add('active');$(btn.dataset.page).classList.add('active')});
+setInterval(()=>{if($('gameScreen').classList.contains('active'))attack(1)},1000);
