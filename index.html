@@ -1,46 +1,94 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lucid Border</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Lucid Border｜明晰夢バトル</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<div class="lang-switch">
-<button onclick="setLang('zh')">中文</button>
-<button onclick="setLang('jp')">日本語</button>
-</div>
+  <main id="app">
+    <section id="startScreen" class="screen active start-screen">
+      <div class="moon"></div>
+      <div class="start-card">
+        <p class="eyebrow">放置型夢境バトルゲーム Demo</p>
+        <h1>Lucid Border</h1>
+        <h2>明晰夢バトル</h2>
+        <p class="intro">現実と夢の境界で、少女は記憶の欠片を武器に、自分自身の悪夢と戦う。</p>
+        <button id="startBtn" class="primary-btn">夢の世界へ</button>
+      </div>
+    </section>
 
-<section class="hero">
-<h1 id="title">Lucid Border</h1>
-<h2 id="subtitle">明晰夢戰鬥</h2>
-<p id="desc">在現實與夢的邊界，少女帶著記憶碎片，對抗自己的夢魘。</p>
-<button id="startBtn">進入夢境</button>
-</section>
+    <section id="gameScreen" class="screen game-screen">
+      <header class="topbar">
+        <div>
+          <p class="mini">Chapter 0</p>
+          <h3>夜の境界</h3>
+        </div>
+        <div class="resources">
+          <span>夢晶 <b id="gemText">300</b></span>
+          <span>記憶 <b id="memoryText">0</b></span>
+        </div>
+      </header>
 
-<section class="menu">
-<div class="card">
-<h3 id="battleTitle">放置戰鬥</h3>
-<p id="battleText">角色會自動戰鬥並獲得夢晶。</p>
-</div>
+      <nav class="tabs">
+        <button class="tab active" data-page="battle">戦闘</button>
+        <button class="tab" data-page="character">キャラ</button>
+        <button class="tab" data-page="gacha">ガチャ</button>
+        <button class="tab" data-page="codex">図鑑</button>
+      </nav>
 
-<div class="card">
-<h3 id="characterTitle">角色</h3>
-<p id="characterText">查看已獲得的角色與能力。</p>
-</div>
+      <section id="battle" class="page active">
+        <div class="battle-stage">
+          <div class="enemy-card">
+            <p class="label">悪夢</p>
+            <div class="enemy-orb"><span id="enemyEmoji">🌑</span></div>
+            <h2 id="enemyName">影の獣</h2>
+            <div class="hpbar"><div id="enemyHpFill"></div></div>
+            <p id="enemyHpText">HP 100 / 100</p>
+          </div>
 
-<div class="card">
-<h3 id="gachaTitle">抽卡</h3>
-<p id="gachaText">消耗夢晶召喚新的角色。</p>
-</div>
+          <div class="hero-line">
+            <div class="hero-avatar">🗡️</div>
+            <div>
+              <p class="label">チーム戦力</p>
+              <h2 id="powerText">10</h2>
+            </div>
+          </div>
+        </div>
+        <div class="battle-log" id="battleLog">自動戦闘中……1秒ごとに攻撃します。</div>
+        <button id="manualAttack" class="secondary-btn">手動攻撃</button>
+      </section>
 
-<div class="card">
-<h3 id="bookTitle">圖鑑</h3>
-<p id="bookText">收集夢境中的角色與怪物。</p>
-</div>
-</section>
+      <section id="character" class="page">
+        <div class="character-card">
+          <div class="portrait" id="portraitEmoji">🗡️</div>
+          <div>
+            <p class="label">主人公</p>
+            <h2 id="charName">ルシア</h2>
+            <p id="charDesc">夢の中で意識を保つ少女。記憶を武器に変える力を持つ。</p>
+          </div>
+        </div>
+        <div id="teamList" class="card-list"></div>
+      </section>
 
-<script src="script.js"></script>
+      <section id="gacha" class="page">
+        <div class="gacha-box">
+          <p class="eyebrow">Dream Gate</p>
+          <h2>夢境召喚</h2>
+          <p>夢晶を100個消費して、夢の中のキャラクターを召喚する。</p>
+          <button id="gachaBtn" class="primary-btn">1回召喚｜夢晶100</button>
+        </div>
+        <div id="gachaResult" class="result-box">まだ召喚していません。</div>
+      </section>
+
+      <section id="codex" class="page">
+        <h2>夢境図鑑</h2>
+        <p class="muted">入手したキャラクターは表示され、未入手のキャラクターは夢の霧に隠されています。</p>
+        <div id="codexGrid" class="codex-grid"></div>
+      </section>
+    </section>
+  </main>
+  <script src="script.js"></script>
 </body>
 </html>
