@@ -7,33 +7,40 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<div class="topbar">
+    <button onclick="setLanguage('jp')">日本語</button>
+    <button onclick="setLanguage('zh')">中文</button>
+</div>
+
 <div class="screen">
-    <h1>ルシッド・ボーダー</h1>
-    <p>夢と現実の境界線</p>
+    <h1 id="title">ルシッド・ボーダー</h1>
+    <p id="subtitle">夢と現実の境界線</p>
 
     <div class="menu">
-        <button>ゲームスタート</button>
-        <button>ガチャ</button>
-        <button>キャラクター</button>
-        <button>図鑑</button>
+        <button id="startBtn">ゲームスタート</button>
+        <button id="gachaBtn">ガチャ</button>
+        <button id="charBtn">キャラクター</button>
+        <button id="bookBtn">図鑑</button>
     </div>
 
     <div class="battle">
-        <h2>自動戦闘中…</h2>
-        <div class="enemy">ナイトメア</div>
-        <button>ボスに挑戦</button>
+        <h2 id="battleTitle">自動戦闘中…</h2>
+        <div class="enemy" id="enemy">ナイトメア</div>
+        <button id="bossBtn">ボスに挑戦</button>
     </div>
 
     <div class="gacha">
-        <h2>ガチャ</h2>
-        <button>1回ガチャ</button>
-        <button>10連ガチャ</button>
+        <h2 id="gachaTitle">ガチャ</h2>
+        <button id="singleBtn">1回ガチャ</button>
+        <button id="tenBtn">10連ガチャ</button>
     </div>
 
     <div class="story">
-        <p>これは「明晰夢」に囚われた少女たちの物語。</p>
+        <p id="storyText">これは「明晰夢」に囚われた少女たちの物語。</p>
     </div>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>
