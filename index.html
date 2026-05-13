@@ -1,94 +1,39 @@
-<!doctype html>
-<html lang="zh-Hant">
+<!DOCTYPE html>
+<html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-  <title>Lucid Border｜明晰夢戰鬥</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucid Border</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main id="app">
-    <section id="startScreen" class="screen active start-screen">
-      <div class="moon"></div>
-      <div class="start-card">
-        <p class="eyebrow">放置型夢境戰鬥手遊 Demo</p>
-        <h1>Lucid Border</h1>
-        <h2>明晰夢戰鬥</h2>
-        <p class="intro">在現實與夢的邊界，少女帶著記憶碎片，對抗自己的夢魘。</p>
-        <button id="startBtn" class="primary-btn">進入夢境</button>
-      </div>
-    </section>
+<div class="screen">
+    <h1>ルシッド・ボーダー</h1>
+    <p>夢と現実の境界線</p>
 
-    <section id="gameScreen" class="screen game-screen">
-      <header class="topbar">
-        <div>
-          <p class="mini">Chapter 0</p>
-          <h3>夜之邊界</h3>
-        </div>
-        <div class="resources">
-          <span>夢晶 <b id="gemText">300</b></span>
-          <span>碎片 <b id="memoryText">0</b></span>
-        </div>
-      </header>
+    <div class="menu">
+        <button>ゲームスタート</button>
+        <button>ガチャ</button>
+        <button>キャラクター</button>
+        <button>図鑑</button>
+    </div>
 
-      <nav class="tabs">
-        <button class="tab active" data-page="battle">戰鬥</button>
-        <button class="tab" data-page="character">角色</button>
-        <button class="tab" data-page="gacha">抽卡</button>
-        <button class="tab" data-page="codex">圖鑑</button>
-      </nav>
+    <div class="battle">
+        <h2>自動戦闘中…</h2>
+        <div class="enemy">ナイトメア</div>
+        <button>ボスに挑戦</button>
+    </div>
 
-      <section id="battle" class="page active">
-        <div class="battle-stage">
-          <div class="enemy-card">
-            <p class="label">夢魘</p>
-            <div class="enemy-orb"><span id="enemyEmoji">🌑</span></div>
-            <h2 id="enemyName">影之獸</h2>
-            <div class="hpbar"><div id="enemyHpFill"></div></div>
-            <p id="enemyHpText">HP 100 / 100</p>
-          </div>
+    <div class="gacha">
+        <h2>ガチャ</h2>
+        <button>1回ガチャ</button>
+        <button>10連ガチャ</button>
+    </div>
 
-          <div class="hero-line">
-            <div class="hero-avatar">🗡️</div>
-            <div>
-              <p class="label">隊伍戰力</p>
-              <h2 id="powerText">10</h2>
-            </div>
-          </div>
-        </div>
-        <div class="battle-log" id="battleLog">自動戰鬥中……每秒攻擊一次。</div>
-        <button id="manualAttack" class="secondary-btn">手動攻擊</button>
-      </section>
-
-      <section id="character" class="page">
-        <div class="character-card">
-          <div class="portrait" id="portraitEmoji">🗡️</div>
-          <div>
-            <p class="label">主角</p>
-            <h2 id="charName">露希亞</h2>
-            <p id="charDesc">在夢裡保持清醒的少女，能將記憶變成武器。</p>
-          </div>
-        </div>
-        <div id="teamList" class="card-list"></div>
-      </section>
-
-      <section id="gacha" class="page">
-        <div class="gacha-box">
-          <p class="eyebrow">Dream Gate</p>
-          <h2>夢境召喚</h2>
-          <p>消耗 100 夢晶，抽取夢境中的角色。抽到角色會增加戰力。</p>
-          <button id="gachaBtn" class="primary-btn">抽一次｜100夢晶</button>
-        </div>
-        <div id="gachaResult" class="result-box">尚未召喚。</div>
-      </section>
-
-      <section id="codex" class="page">
-        <h2>夢境圖鑑</h2>
-        <p class="muted">收集到的角色會亮起，未取得的角色仍被夢霧遮住。</p>
-        <div id="codexGrid" class="codex-grid"></div>
-      </section>
-    </section>
-  </main>
-  <script src="script.js"></script>
+    <div class="story">
+        <p>これは「明晰夢」に囚われた少女たちの物語。</p>
+    </div>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
