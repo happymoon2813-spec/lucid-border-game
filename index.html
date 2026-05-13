@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lucid Border - Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <main class="game-shell">
+    <section class="top-bar">
+      <div>
+        <h1>Lucid Border</h1>
+        <p>明晰夢の境界で、悪夢と戦う。</p>
+      </div>
+      <div class="status">
+        <span>HP <b id="hp">100</b></span>
+        <span>記憶 <b id="memory">0</b>/3</span>
+      </div>
+    </section>
+
+    <section class="scene-card">
+      <div id="sceneVisual" class="scene-visual moon"></div>
+      <div class="dialogue">
+        <p id="sceneText"></p>
+      </div>
+      <div id="choices" class="choices"></div>
+    </section>
+
+    <section class="log-card">
+      <h2>Dream Log</h2>
+      <ul id="log"></ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
